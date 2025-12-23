@@ -1,0 +1,33 @@
+#!/bin/bash
+set -e
+
+# Define colors
+GREEN='\033[0;32m'
+NC='\033[0m' # No Color
+
+echo -e "${GREEN}Building QuickTube 2.0...${NC}"
+
+# Cleanup
+echo "Cleaning up old builds..."
+rm -rf build dist .venv quicktube.spec
+
+# Create Virtual Environment
+echo "Creating virtual environment..."
+python3 -m venv .venv
+source .venv/bin/activate
+
+# Install dependencies
+echo "Installing dependencies..."
+pip install --upgrade pip
+pip install -r requirements.txt
+pip install pyinstaller
+
+# Build
+echo "Compiling binary with PyInstaller..."
+pyinstaller --onefile --name quicktube --clean quicktube.py
+
+# Organize output
+mkdir -p bin
+cp dist/quicktube bin/
+
+echo -e "${GREEN}Build complete! Binary located at: bin/quicktube${NC}"
